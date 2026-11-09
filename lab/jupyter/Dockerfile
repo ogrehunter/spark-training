@@ -1,0 +1,70 @@
+FROM apache/spark:3.5.7
+
+USER root
+
+# Update Python packaging tools
+RUN python3 -m pip install --no-cache-dir --upgrade \
+    pip \
+    setuptools \
+    wheel
+
+# Install Jupyter dependencies using precompiled wheels
+RUN python3 -m pip install --no-cache-dir \
+    --prefer-binary \
+    "pyzmq>=25,<27" \
+    "jupyterlab>=4,<5" \
+    pandas \
+    "pyarrow>=4,<13" \
+    psycopg2-binary \
+    pyspark==3.5.7
+
+
+# Install Hadoop client matching the HDFS cluster version
+ARG TARGETARCH
+ENV HADOOP_HOME=/opt/hadoop
+ENV HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+ENV PATH="${HADOOP_HOME}/bin:${PATH}"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && case "$TARGETARCH" in \
+         arm64) HADOOP_ARCH="-aarch64" ;; \
+         *) HADOOP_ARCH="" ;; \
+       esac \
+    && curl -fL \
+       "https://downloads.apache.org/hadoop/common/hadoop-3.4.3/hadoop-3.4.3${HADOOP_ARCH}.tar.gz" \
+       -o /tmp/hadoop.tar.gz \
+    && mkdir -p "${HADOOP_HOME}" \
+    && tar -xzf /tmp/hadoop.tar.gz \
+       -C "${HADOOP_HOME}" --strip-components=1 \
+    && rm /tmp/hadoop.tar.gz \
+    && JAVA_DIR="$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")" \
+    && printf '\nexport JAVA_HOME=%s\n' "$JAVA_DIR" \
+       >> "${HADOOP_HOME}/etc/hadoop/hadoop-env.sh"
+
+RUN mkdir -p \
+    /home/spark/notebooks \
+    /home/spark/datasets \
+    /home/spark/.local/share/jupyter/runtime \
+    && chown -R spark:spark /home/spark
+
+USER spark
+
+ENV HOME=/home/spark
+ENV JUPYTER_RUNTIME_DIR=/home/spark/.local/share/jupyter/runtime
+
+# Spark environment
+ENV SPARK_HOME=/opt/spark
+ENV PATH="${SPARK_HOME}/bin:${PATH}"
+ENV PYSPARK_PYTHON=python3
+
+WORKDIR /home/spark/notebooks
+
+CMD ["python3", "-m", "jupyterlab", \
+     "--ip=0.0.0.0", \
+     "--port=8888", \
+     "--no-browser", \
+     "--IdentityProvider.token=", \
+     "--ServerApp.root_dir=/home/spark", \
+     "--ServerApp.terminado_settings={\"shell_command\":[\"/bin/bash\"]}"]

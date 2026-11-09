@@ -1,0 +1,2 @@
+# Zscaler certificate
+Place the **approved, PEM-encoded corporate CA certificate** at `zscaler.crt` before using `Dockerfile.zscaler`. Do not add a placeholder or unrelated certificate. The certificate is intentionally not included in this package. Confirm its origin and fingerprint with your infrastructure/security team. The file is copied into the image during build; guard access to the image appropriately. The certificate is used for TLS verification, **not** to bypass it.

@@ -1,0 +1,10 @@
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+outputs/*
+!outputs/.gitkeep
+stream-input/*
+!stream-input/.gitkeep
+jupyter/certs/*.crt
+jupyter/certs/*.pem
+.env
