@@ -1,0 +1,13 @@
+{
+  "valid_invoice_count": 29397,
+  "valid_invoice_sum": 14090726606,
+  "raw_invoice_count": 31578,
+  "invoice_business_keys": 30000,
+  "duplicate_invoice_rows": 1578,
+  "invalid_invoice_date_rows": 325,
+  "orphan_invoice_rows": 312,
+  "payment_count": 34285,
+  "taxpayer_count": 5000,
+  "office_count": 8,
+  "seed": 2026
+}
