@@ -118,7 +118,7 @@ services:
   spark-master:
     image: apache/spark:3.5.7
     command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master", "--host", "spark-master"]
-    ports: ["127.0.0.1:8080:8080"]
+    ports: ["8080:8080"]
     networks: [sparknet]
     volumes:
       - ./hadoop/core-site.xml:/opt/spark/conf/core-site.xml:ro
@@ -129,7 +129,7 @@ services:
     image: apache/spark:3.5.7
     command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--cores", "2", "--memory", "2G", "--webui-port", "8081"]
     depends_on: [spark-master]
-    ports: ["127.0.0.1:8081:8081"]
+    ports: ["8081:8081"]
     volumes:
       - ./datasets:/home/spark/datasets:ro
       - ./outputs:/home/spark/outputs
@@ -143,7 +143,7 @@ services:
     image: apache/spark:3.5.7
     command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--cores", "2", "--memory", "2G", "--webui-port", "8081"]
     depends_on: [spark-master]
-    ports: ["127.0.0.1:8082:8081"]
+    ports: ["8082:8081"]
     volumes:
       - ./datasets:/home/spark/datasets:ro
       - ./outputs:/home/spark/outputs
@@ -172,8 +172,8 @@ services:
       PYSPARK_PYTHON: python3
       PYSPARK_DRIVER_PYTHON: python3
     ports:
-      - "127.0.0.1:8888:8888"
-      - "127.0.0.1:4040:4040"
+      - "8888:8888"
+      - "4040:4040"
     volumes:
       - ./notebooks:/home/spark/notebooks
       - ./spark-app:/home/spark/spark-app
