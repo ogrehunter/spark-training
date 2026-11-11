@@ -26,7 +26,7 @@ ENV HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
 ENV PATH="${HADOOP_HOME}/bin:${PATH}"
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && apt-get install -y --no-install-recommends curl ca-certificates postgresql-client \
     && rm -rf /var/lib/apt/lists/* \
     && case "$TARGETARCH" in \
          arm64) HADOOP_ARCH="-aarch64" ;; \
