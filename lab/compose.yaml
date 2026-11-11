@@ -33,7 +33,7 @@ services:
     environment:
       ENSURE_NAMENODE_DIR: /tmp/hadoop-root/dfs/name
     ports:
-      - "127.0.0.1:9870:9870"
+      - "9870:9870"
     volumes:
       - namenode-data:/tmp/hadoop-root/dfs/name
       - ./hadoop/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
