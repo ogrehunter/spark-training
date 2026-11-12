@@ -95,6 +95,8 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+.Trash-185/
+
 
 # IPython
 profile_default/
