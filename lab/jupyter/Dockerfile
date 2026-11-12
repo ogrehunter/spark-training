@@ -2,6 +2,10 @@ FROM apache/spark:3.5.7
 
 USER root
 
+COPY install-kafka-connector.sh /tmp/install-kafka-connector.sh
+RUN /bin/sh /tmp/install-kafka-connector.sh \
+    && rm /tmp/install-kafka-connector.sh
+
 # Update Python packaging tools
 RUN python3 -m pip install --no-cache-dir --upgrade \
     pip \

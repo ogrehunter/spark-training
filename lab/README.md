@@ -42,7 +42,7 @@ Notebook files and local working directories are writable by the container Spark
 
 ## Classroom path
 
-Open notebooks in order: `01_spark_foundations.ipynb`, `02_dataframe_processing.ipynb`, `03_integration_transformation.ipynb`, `04_spark_sql_analytics.ipynb`, `05_structured_streaming.ipynb`, `06_optimization_monitoring.ipynb`. The instructor guide maps every notebook to the official timetable and 35 JP. `07` is a consolidation task and `08` is an optional Kafka producer demo. PostgreSQL seeds are initialized at first launch only (if database volume is clean).
+Open the six top-level notebooks in `notebooks/` in numeric order. The deck-to-notebook mapping is documented in `../materials/pptx-notebook-alignment.md`; `Ver1` and `Ver2` are alternative archives, not the primary classroom path. PostgreSQL seeds are initialized at first launch only (if the database volume is clean).
 
 **Important:** Only one concurrently active Jupyter/CLI Spark driver is supported by this lab's fixed ports 4050/4051. Shut down the previous notebook's SparkSession (`spark.stop()`) when switching to CLI job execution. Different notebooks in the same Jupyter kernel should reuse the existing session. When in doubt, restart the kernel.
 
@@ -64,7 +64,7 @@ python3 scripts/reset_stream.py
 python3 scripts/emit_stream.py --count 20 --interval 2
 ```
 
-Notebook 05 supports file-based streaming (guaranteed with included connector). `f_streaming.py` offers a terminal-based streaming demo. Kafka broker and Python producer are present, but **Spark's Kafka source requires additional compatible JAR dependencies** and is not part of the baseline offline exercise.
+Notebook 05 uses the bundled Spark 3.5.7 Kafka connector for the primary exercises. `f_streaming.py` remains a terminal-based file-streaming demonstration.
 
 ## Stop / reset
 
@@ -78,7 +78,7 @@ If modifying a streaming query definition, reset its checkpoint using `python3 s
 
 ## Caveats and known constraints
 
-- The Spark Docker image is pinned to `apache/spark:3.5.7` following provided baseline. Python modules are imported from Spark's bundled Python directory; the setup avoids installing a second mismatched PySpark wheel.
+- The Spark runtime is based on `apache/spark:3.5.7`; the Kafka connector and its transitive dependencies are resolved during image build and copied into both driver and executor images.
 - NoSQL source is in the KAP but absent from initial Compose; discussed conceptually without pretending there's a deployed NoSQL database.
 - The sample data is small and fictional; use it for conceptual verification, **not benchmarking**. Streaming timestamps are generated in UTC and files are atomically renamed before ingestion.
 - First build needs external access for `pip` and the PostgreSQL JDBC driver. If corporate infrastructure forbids direct outbound downloads, internally mirror the wheels/JAR, amend Dockerfile accordingly, and preserve certificate validation.

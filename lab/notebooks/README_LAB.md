@@ -34,8 +34,8 @@ UI yang digunakan saat lab:
 ## Catatan dependency
 
 - **JDBC PostgreSQL:** notebook Topik 3 melakukan preflight `org.postgresql.Driver`. Untuk kelas offline, JDBC JAR sebaiknya sudah dibake ke image driver/executor.
-- **Kafka:** notebook Topik 5 melakukan preflight connector. Untuk Spark 3.5.7, siapkan connector Spark SQL Kafka yang sesuai sebelum kelas; jangan mengandalkan download Maven live saat pelatihan.
-- Bagian inti Topik 3 dan 5 tetap memiliki fallback/non-Kafka path sehingga peserta tetap dapat melanjutkan konsep utama jika connector belum tersedia.
+- **Kafka:** connector `spark-sql-kafka-0-10_2.12:3.5.7` beserta dependency transitif dibundel ke image driver dan executor saat build. Notebook Topik 5 tidak mengunduh Maven package saat kelas.
+- **JDBC PostgreSQL:** Notebook 03 membaca `public.taxpayer_reference`; kegagalan JDBC diperlakukan sebagai kegagalan environment, bukan diganti diam-diam dengan fallback sintetis.
 
 ## Pola fasilitasi
 

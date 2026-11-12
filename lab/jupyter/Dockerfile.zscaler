@@ -14,6 +14,10 @@ ENV PIP_CERT=/etc/ssl/certs/ca-certificates.crt \
     SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
     CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
+COPY install-kafka-connector.sh /tmp/install-kafka-connector.sh
+RUN /bin/sh /tmp/install-kafka-connector.sh \
+    && rm /tmp/install-kafka-connector.sh
+
 # Update Python packaging tools
 RUN python3 -m pip install --no-cache-dir --upgrade \
     pip \

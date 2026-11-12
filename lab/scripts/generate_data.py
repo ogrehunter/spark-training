@@ -35,6 +35,23 @@ for i in range(1, 1801):
         'status': 'VOID' if i % 29 == 0 else 'PAID'
     })
 write_csv('payments.csv', payments)
+
+offices = ['Jakarta Selatan', 'Bandung', 'Surabaya', 'Bogor']
+tax_types = ['PPN', 'PPh', 'PBB']
+channels = ['Portal', 'API', 'Manual']
+transactions = [{
+    'trx_id': f'T{i:07d}',
+    'taxpayer_id': f'TP{(i % 300) + 1:04d}',
+    'trx_date': (datetime.date(2026, 8, 1) + datetime.timedelta(days=i % 92)).isoformat(),
+    'office': offices[i % len(offices)],
+    'tax_type': tax_types[i % len(tax_types)],
+    'channel': channels[(i // 3) % len(channels)],
+    'status': 'CANCEL' if i % 11 == 0 else 'VALID',
+    # Repeat every 10,000 rows so the ranking lab contains deliberate ties.
+    'amount': (((i % 10_000) * 7919) % 20_000_000) + 50_000,
+} for i in range(1, 50_001)]
+write_csv('transactions.csv', transactions)
+
 with (out / 'filings.jsonl').open('w', encoding='utf-8') as f:
     for i in range(1, 501):
         record = {
@@ -44,4 +61,4 @@ with (out / 'filings.jsonl').open('w', encoding='utf-8') as f:
             'metadata': {'source': 'simulated', 'batch': i % 5}
         }
         f.write(json.dumps(record, ensure_ascii=False) + '\n')
-print('Generated 300 taxpayers, 1800 payments and 500 filings')
+print('Generated 300 taxpayers, 1800 payments, 500 filings and 50000 transactions')

@@ -21,7 +21,7 @@ Based on the supplied 2026 KAP and schedule. Official subject names and JP are p
 - Show one Spark UI observation *per module*, not just slides. Use interactive debugging and stop old notebook SparkSessions when running `spark-app` CLI jobs.
 - At the end of each exercise: require a result, validation and explanation. Ask students to name the **grain** of their results and whether `join` can multiply rows.
 - The capstone notebook 07 is embedded in module practice periods if time permits; it is not extra JP.
-- Mark notebook 08 as optional: Kafka producer works, but Spark Kafka integration needs extra connector jars.
+- Use Notebook 05 for the bundled Kafka labs. Verify topic initialization and connector class loading before class; no runtime Maven access is required.
 - Discuss NoSQL integration conceptually or extend using an organization-approved connector/service; no NoSQL service was specified in supplied Compose.
 - Pre- and post-tests: 25 closed-book MCQs, non-passing program, per KAP. A sample bank and key is provided separately.
 

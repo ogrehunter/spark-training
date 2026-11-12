@@ -1,3 +1,9 @@
+x-spark-runtime: &spark-runtime
+  image: spark-training-runtime:3.5.7
+  build:
+    context: ./jupyter
+    dockerfile: Dockerfile.spark
+
 services:
   # One-shot initializer for HDFS named-volume ownership and permissions.
   hdfs-init:
@@ -116,7 +122,7 @@ services:
       - ./hadoop/hdfs-site.xml:/hive_custom_conf/hdfs-site.xml:ro
 
   spark-master:
-    image: apache/spark:3.5.7
+    <<: *spark-runtime
     command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master", "--host", "spark-master"]
     ports: ["8080:8080"]
     networks: [sparknet]
@@ -126,7 +132,7 @@ services:
       - ./jars/postgresql.jar:/opt/spark/jars/postgresql.jar:ro
 
   spark-worker-1:
-    image: apache/spark:3.5.7
+    <<: *spark-runtime
     command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--cores", "2", "--memory", "2G", "--webui-port", "8081"]
     depends_on: [spark-master]
     ports: ["8081:8081"]
@@ -140,7 +146,7 @@ services:
     networks: [sparknet]
 
   spark-worker-2:
-    image: apache/spark:3.5.7
+    <<: *spark-runtime
     command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--cores", "2", "--memory", "2G", "--webui-port", "8081"]
     depends_on: [spark-master]
     ports: ["8082:8081"]
@@ -189,7 +195,13 @@ services:
       # Jars
       - ./jars/postgresql.jar:/opt/spark/jars/postgresql.jar:ro
       
-    depends_on: [spark-master, postgres, kafka]
+    depends_on:
+      spark-master:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
     networks: [sparknet]
 
   postgres:
@@ -224,6 +236,30 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     ports: ["127.0.0.1:9092:9092"]
+    networks: [sparknet]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  kafka-init:
+    image: apache/kafka:3.9.1
+    command:
+      - /opt/kafka/bin/kafka-topics.sh
+      - --bootstrap-server
+      - kafka:9092
+      - --create
+      - --if-not-exists
+      - --topic
+      - transactions
+      - --partitions
+      - "2"
+      - --replication-factor
+      - "1"
+    depends_on:
+      kafka:
+        condition: service_healthy
     networks: [sparknet]
 
 volumes:
