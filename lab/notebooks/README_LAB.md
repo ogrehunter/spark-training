@@ -8,12 +8,14 @@ Paket ini dibuat agar praktik mengikuti urutan dan kompetensi pada enam presenta
    Arsitektur, partition/task, lazy evaluation, DAG, execution plan, Spark UI.
 2. `02_Lab_Spark_Data_Processing.ipynb`  
    DataFrame dasar, select/filter/sort, null/cast, kategori, agregasi, mini-case.
+   - Demo instruktur terpisah: `demo/02_Demo_Spark_Data_Processing.ipynb` untuk seluruh slide DEMONSTRASI di Deck 02.
 3. `03_Lab_Data_Integration_dan_Transformation.ipynb`  
    CSV/JSON/Parquet/ORC, schema, data quality, JDBC, join/union, lineage, curated dataset.
 4. `04_Lab_Spark_SQL_dan_Data_Analytics.ipynb`  
    SQL vs DataFrame, built-ins, aggregation, window, KPI, plan, mini project.
 5. `05_Lab_Spark_Structured_Streaming.ipynb`  
    Rate/file streaming, progress, event time, window, watermark, checkpoint, Kafka preflight.
+   - Demo instruktur terpisah: `demo/05_Demo_Spark_Structured_Streaming.ipynb` untuk seluruh slide DEMO di Deck 05.
 6. `06_Lab_Spark_Optimization_dan_Best_Practices.ipynb`  
    Baseline/evidence, reduce-before-shuffle, broadcast join, shuffle partitions, cache, skew.
 
