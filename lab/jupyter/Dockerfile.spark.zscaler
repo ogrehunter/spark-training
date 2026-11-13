@@ -1,0 +1,18 @@
+FROM apache/spark:3.5.7
+
+USER root
+
+COPY certs/zscaler.crt /usr/local/share/ca-certificates/zscaler.crt
+
+RUN update-ca-certificates \
+    && keytool -importcert -noprompt -trustcacerts \
+       -alias zscaler \
+       -file /usr/local/share/ca-certificates/zscaler.crt \
+       -cacerts \
+       -storepass changeit
+
+COPY install-kafka-connector.sh /tmp/install-kafka-connector.sh
+RUN /bin/sh /tmp/install-kafka-connector.sh \
+    && rm /tmp/install-kafka-connector.sh
+
+USER spark

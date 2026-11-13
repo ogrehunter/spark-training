@@ -7,7 +7,12 @@ USER root
 
 COPY certs/zscaler.crt /usr/local/share/ca-certificates/zscaler.crt
 
-RUN update-ca-certificates
+RUN update-ca-certificates \
+    && keytool -importcert -noprompt -trustcacerts \
+       -alias zscaler \
+       -file /usr/local/share/ca-certificates/zscaler.crt \
+       -cacerts \
+       -storepass changeit
 
 ENV PIP_CERT=/etc/ssl/certs/ca-certificates.crt \
     REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \

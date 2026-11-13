@@ -2,7 +2,7 @@ x-spark-runtime: &spark-runtime
   image: spark-training-runtime:3.5.7
   build:
     context: ./jupyter
-    dockerfile: Dockerfile.spark
+    dockerfile: ${SPARK_DOCKERFILE:-Dockerfile.spark}
 
 services:
   # One-shot initializer for HDFS named-volume ownership and permissions.

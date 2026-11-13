@@ -21,11 +21,11 @@ docker compose ps
 3. Build with:
 
 ```bash
-JUPYTER_DOCKERFILE=Dockerfile.zscaler docker compose build jupyter
-JUPYTER_DOCKERFILE=Dockerfile.zscaler docker compose up -d
+SPARK_DOCKERFILE=Dockerfile.spark.zscaler JUPYTER_DOCKERFILE=Dockerfile.zscaler docker compose build
+SPARK_DOCKERFILE=Dockerfile.spark.zscaler JUPYTER_DOCKERFILE=Dockerfile.zscaler docker compose up -d
 ```
 
-Dockerfile.zscaler calls `update-ca-certificates` **before** pip, sets `PIP_CERT`, `REQUESTS_CA_BUNDLE`, `SSL_CERT_FILE` and `CURL_CA_BUNDLE`, and explicitly passes `pip --cert`. No TLS bypass flags. To troubleshoot, compare image build logs and check whether proxy access is also required; trust and proxy settings are different issues. If a proxy is necessary, set Docker Desktop/Engine proxy options and compose build proxy build args as directed by IT; the CA alone does not configure routing.
+The Zscaler Dockerfiles add the CA to both the OS and Java truststores before downloading the Kafka connector or Python packages. `Dockerfile.zscaler` also sets `PIP_CERT`, `REQUESTS_CA_BUNDLE`, `SSL_CERT_FILE` and `CURL_CA_BUNDLE`. No TLS bypass flags are used. To troubleshoot, compare image build logs and check whether proxy access is also required; trust and proxy settings are different issues. If a proxy is necessary, set Docker Desktop/Engine proxy options and Compose build proxy build args as directed by IT; the CA alone does not configure routing.
 
 ## Access
 
